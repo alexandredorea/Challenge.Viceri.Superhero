@@ -435,6 +435,7 @@ dist-ssr
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+/frontend/.vscode
 .idea
 .DS_Store
 *.suo
@@ -442,4 +443,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-/frontend/.vscode
+
