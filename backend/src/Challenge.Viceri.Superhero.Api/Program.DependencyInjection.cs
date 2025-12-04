@@ -48,6 +48,17 @@ public static class DependencyInjection
                 option.IncludeXmlComments(xmlPath, true);
         });
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend", builder =>
+            {
+                builder.WithOrigins("http://localhost:5173")
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
+
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure();
 

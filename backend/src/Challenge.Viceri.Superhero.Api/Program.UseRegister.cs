@@ -25,10 +25,11 @@ public static class UseRegister
             });
         }
 
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
         app.UseHsts();
         app.UseAuthorization();
         app.MapControllers();
+        app.UseCors("AllowFrontend");
 
         return app;
     }
