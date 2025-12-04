@@ -14,7 +14,7 @@ public record CreateHeroCommand(
     float Weight
 ) : IRequest<HeroDto>;
 
-internal sealed class CreateHeroCommandHandler(ISuperheroContext context)
+public sealed class CreateHeroCommandHandler(ISuperheroContext context)
     : IRequestHandler<CreateHeroCommand, HeroDto>
 {
     public async Task<HeroDto> Handle(CreateHeroCommand request, CancellationToken cancellationToken)

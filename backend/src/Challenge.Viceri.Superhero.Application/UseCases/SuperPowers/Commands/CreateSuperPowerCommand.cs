@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Challenge.Viceri.Superhero.Application.UseCases.SuperPowers.Commands;
 
-public sealed record CreateSuperPowerCommand(string Name, string Description) : IRequest<SuperPowerDto>;
+public sealed record CreateSuperPowerCommand(string Name, string? Description) : IRequest<SuperPowerDto>;
 
 internal sealed class CreateSuperPowerCommandHandler(ISuperheroContext context)
     : IRequestHandler<CreateSuperPowerCommand, SuperPowerDto>

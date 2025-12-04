@@ -11,7 +11,7 @@ public sealed class HeroDto
     public float Height { get; init; }
     public float Weight { get; init; }
     public DateTime? DateBirth { get; init; }
-    public List<SuperPowerDto?> SuperPower { get; init; } = default!;
+    public List<SuperPowerDto?> SuperPowers { get; init; } = default!;
 
     public static implicit operator HeroDto?(Hero? hero)
     {
@@ -26,7 +26,7 @@ public sealed class HeroDto
             DateBirth = hero.DateBirth,
             Height = hero.Height,
             Weight = hero.Weight,
-            SuperPower = hero.HeroSuperPowers
+            SuperPowers = hero.HeroSuperPowers
                 .Where(hsp => hsp.SuperPower != null)
                 .Select(hsp => (SuperPowerDto?)hsp.SuperPower)
                 .ToList()

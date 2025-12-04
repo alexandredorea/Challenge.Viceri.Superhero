@@ -26,7 +26,7 @@ public sealed class UpdateHeroCommand : IRequest<HeroDto?>
     public void SetHeroId(int id) => Id = id;
 }
 
-internal sealed class UpdateHeroCommandHandler(ISuperheroContext context)
+public sealed class UpdateHeroCommandHandler(ISuperheroContext context)
         : IRequestHandler<UpdateHeroCommand, HeroDto?>
 {
     public async Task<HeroDto?> Handle(UpdateHeroCommand request, CancellationToken cancellationToken)

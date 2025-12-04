@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Challenge.Viceri.Superhero.Infrastructure.Persistences.Data;
 
-internal sealed class SuperheroContext(DbContextOptions<SuperheroContext> options)
+public sealed class SuperheroContext(DbContextOptions<SuperheroContext> options)
     : DbContext(options), ISuperheroContext
 {
     public DbSet<Hero> Heroes => Set<Hero>();
