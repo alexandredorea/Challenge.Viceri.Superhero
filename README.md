@@ -1,6 +1,6 @@
 # Challenge Viceri
 
-Esta é uma aplicação que implementa um CRUD (Create, Read, Update, Delete) de Super-Heróis com associação de Superpoderes, conforme os requisitos propostos.
+Esta é uma aplicação que implementa um CRUD (Create, Read, Update, Delete) de Super-Heróis com associação de Superpoderes, conforme os requisitos propostos (vide desafio completo [clicando aqui](https://github.com/alexandredorea/Challenge.Viceri.Superhero/blob/master/docs/Desafio%20t%C3%A9cnico%20ME%20-%20Dev%20FullStack%20-%20(.Net%20e%20Vue)%20S%C3%AAnior%20-%20ate%2048h%20para%20conclus%C3%A3o.pdf)).
 
 ## Tecnologias Utilizadas
 
@@ -35,7 +35,6 @@ O backend foi estruturado seguindo o princípio de **Responsabilidades Separadas
 *   **Result Pattern:** Utilizado para encapsular o resultado das operações de negócio, permitindo um tratamento de erros explícito e padronizado (sucesso ou falha com um objeto `Error`).
 *   **Validação:** Utilizado o **FluentValidation** para validar os *Commands* de entrada.
 *   **Clean Architecture:** Separação clara entre camadas, dependências apontando para o núcleo da aplicação (Domain).
-*   **Repository Pattern:** Utilizado o EF Core com abstrações apropriadas para acesso a dados.
 
 ## Funcionalidades Implementadas
 
@@ -65,7 +64,7 @@ A documentação completa da API está disponível via **Swagger** na rota `/swa
 
 ### Frontend (Vue.js)
 
-O frontend provê uma interface interativa para:
+O frontend provê uma interface simples (não é o meu forte) para:
 
 #### Gestão de Heróis
 1.  Visualizar a lista de heróis com seus superpoderes associados.
@@ -104,26 +103,13 @@ O frontend provê uma interface interativa para:
     npm install -D tailwindcss postcss autoprefixer
     npx tailwindcss init -p
     ```
-4.  Configure o arquivo `.env`:
-    ```env
-    VITE_API_URL=http://localhost:5110/api
-    ```
-5.  Inicie o servidor de desenvolvimento:
+4.  Inicie o servidor de desenvolvimento:
     ```bash
     npm run dev
     ```
     O frontend estará disponível em `http://localhost:5173`.
 
-### 3. Build para Produção (Frontend)
-
-Para criar uma versão otimizada para produção:
-```bash
-npm run build
-```
-
-Os arquivos otimizados estarão na pasta `dist/`.
-
-### 4. Testes Unitários
+### 3. Testes do Backend
 
 Na raiz do projeto backend, execute:
 ```bash
