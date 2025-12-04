@@ -5,15 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Challenge.Viceri.Superhero.Application.UseCases.Heros.Validations;
 
-internal sealed class CreateHeroCommandValidator : AbstractValidator<CreateHeroCommand>
+public sealed class CreateHeroCommandValidator : AbstractValidator<CreateHeroCommand>
 {
     private readonly ISuperheroContext _context;
 
     private const int MaxNameLength = 120;
     private const int MaxCodenameLength = 120;
-    private const float MinHeight = 0.5f;
     private const float MaxHeight = 3.0f;
-    private const float MinWeight = 1.0f;
     private const float MaxWeight = 500.0f;
     private const int MinAgeYears = 15;
     private const int MaxAgeYears = 150;
@@ -29,81 +27,37 @@ internal sealed class CreateHeroCommandValidator : AbstractValidator<CreateHeroC
     private void ConfigureSynchronousValidation()
     {
         RuleFor(x => x.Name)
-            .NotEmpty()
-            .WithMessage("O nome é obrigatório.")
-            .WithErrorCode("Hero.Name.Required")
-            .MaximumLength(MaxNameLength)
-            .WithMessage("O nome não pode exceder {MaxLength} caracteres.")
-            .WithErrorCode("Hero.Name.MaxLength");
+            .NotEmpty().WithMessage("O nome é obrigatório.")
+            .MaximumLength(MaxNameLength).WithMessage("O nome não pode exceder {MaxLength} caracteres.");
 
         RuleFor(x => x.Codename)
-            .NotEmpty()
-            .WithMessage("O alter ego ({PropertyName}) é obrigatório.")
-            .WithErrorCode("Hero.Codename.Required")
-            .MaximumLength(MaxCodenameLength)
-            .WithMessage("O alter ego ({PropertyName}) não pode exceder {MaxLength} caracteres.")
-            .WithErrorCode("Hero.Codename.MaxLength");
+            .NotEmpty().WithMessage("O alter ego ({PropertyName}) é obrigatório.")
+            .MaximumLength(MaxCodenameLength).WithMessage("O alter ego ({PropertyName}) não pode exceder {MaxLength} caracteres.");
 
         RuleFor(x => x.SuperpowerIds)
-            .NotNull()
-            .WithMessage("A lista de Superpoderes não pode ser nula.")
-            .WithErrorCode("Hero.Superpowers.Required")
-            .NotEmpty()
-            .WithMessage("A lista de Superpoderes deve conter ao menos um item.")
-            .WithErrorCode("Hero.Superpowers.Empty")
-            .Must(ids => ids.All(id => id > 0))
-            .WithMessage("Todos os IDs de Superpoderes devem ser maiores que zero.")
-            .WithErrorCode("Hero.Superpowers.InvalidIds")
-            .Must(ids => ids.Distinct().Count() == ids.Count)
-            .WithMessage("A lista de Superpoderes contém IDs duplicados.")
-            .WithErrorCode("Hero.Superpowers.Duplicates");
+            .NotNull().WithMessage("A lista de Superpoderes não pode ser nula.")
+            .NotEmpty().WithMessage("A lista de Superpoderes deve conter ao menos um item.")
+            .Must(ids => ids.All(id => id > 0)).WithMessage("Todos os IDs de Superpoderes devem ser maiores que zero.")
+            .Must(ids => ids.Distinct().Count() == ids.Count).WithMessage("A lista de Superpoderes contém IDs duplicados.");
 
         RuleFor(x => x.Height)
-            .GreaterThan(0)
-            .WithMessage("A altura deve ser maior que zero.")
-            .WithErrorCode("Hero.Height.Invalid")
-            .LessThan(MaxHeight)
-            .WithMessage("A altura não pode ser maior que {ComparisonValue}m.")
-            .WithErrorCode("Hero.Height.MaxValue");
+            .GreaterThan(0).WithMessage("A altura deve ser maior que zero.")
+            .LessThan(MaxHeight).WithMessage("A altura não pode ser maior que {ComparisonValue}m.");
 
         RuleFor(x => x.Weight)
             .GreaterThan(0)
             .WithMessage("O peso deve ser maior que zero.")
-            .WithErrorCode("Hero.Weight.Invalid")
             .LessThan(MaxWeight)
-            .WithMessage("O peso não pode ser maior que {ComparisonValue} kg.")
-            .WithErrorCode("Hero.Weight.MaxValue");
+            .WithMessage("O peso não pode ser maior que {ComparisonValue} kg.");
 
         When(x => x.DateBirth.HasValue, () =>
         {
             RuleFor(x => x.DateBirth!.Value)
-                .LessThanOrEqualTo(DateTime.UtcNow)
-                .WithMessage("A data de nascimento não pode ser no futuro.")
-                .WithErrorCode("Hero.DateBirth.Future");
-
-            RuleFor(x => x.DateBirth!.Value)
-                .GreaterThanOrEqualTo(DateTime.UtcNow.AddYears(-MaxAgeYears))
-                .WithMessage($"A data de nascimento não pode ser anterior a {MaxAgeYears} anos atrás.")
-                .WithErrorCode("Hero.DateBirth.TooOld");
-
-            // Validação de idade mínima
-            RuleFor(x => x.DateBirth!.Value)
-                .LessThanOrEqualTo(DateTime.UtcNow.AddYears(-MinAgeYears))
-                .WithMessage($"O herói deve ter pelo menos {MinAgeYears} anos.")
-                .WithErrorCode("Hero.DateBirth.TooYoung")
-                .When(x => MinAgeYears > 0);
-
-            // Validação de data razoável (não aceitar datas muito antigas)
-            RuleFor(x => x.DateBirth!.Value)
-                .GreaterThan(new DateTime(1800, 1, 1))
-                .WithMessage("A data de nascimento deve ser posterior a 01/01/1800.")
-                .WithErrorCode("Hero.DateBirth.TooAncient");
-
-            // Validação customizada para calcular idade
-            RuleFor(x => x.DateBirth!.Value)
-                .Must(BeAReasonableAge)
-                .WithMessage(x => $"A idade de {CalculateAge(x.DateBirth!.Value)} anos não é realista.")
-                .WithErrorCode("Hero.DateBirth.UnreasonableAge");
+                .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("A data de nascimento não pode ser no futuro.")
+                .GreaterThanOrEqualTo(DateTime.UtcNow.AddYears(-MaxAgeYears)).WithMessage($"A data de nascimento não pode ser anterior a {MaxAgeYears} anos atrás.")
+                .LessThanOrEqualTo(DateTime.UtcNow.AddYears(-MinAgeYears)).WithMessage($"O herói deve ter pelo menos {MinAgeYears} anos.")
+                .When(x => MinAgeYears > 0).GreaterThan(new DateTime(1800, 1, 1)).WithMessage("A data de nascimento deve ser posterior a 01/01/1800.")
+                .Must(BeAReasonableAge).WithMessage(x => $"A idade de {CalculateAge(x.DateBirth!.Value)} anos não é realista.");
         });
     }
 
@@ -127,15 +81,10 @@ internal sealed class CreateHeroCommandValidator : AbstractValidator<CreateHeroC
     private void ConfigureAsynchronousValidation()
     {
         RuleFor(x => x.Codename)
-            .MustAsync(BeUniqueCodenameAsync)
-            .WithMessage(x => $"Já existe outro herói com o nome '{x.Codename}'.")
-            .WithErrorCode("Hero.Codename.Conflict")
-            .WithName("Codename");
+            .MustAsync(BeUniqueCodenameAsync).WithMessage(x => $"Já existe outro herói com o nome '{x.Codename}'.");
 
         RuleFor(x => x.SuperpowerIds)
-            .MustAsync(AllSuperpowersExistAsync)
-            .WithMessage(ValidateSuperpowersWithDetails)
-            .WithErrorCode("Hero.Superpowers.Invalid");
+            .MustAsync(AllSuperpowersExistAsync).WithMessage(ValidateSuperpowersWithDetails);
     }
 
     private string ValidateSuperpowersWithDetails(CreateHeroCommand command)
